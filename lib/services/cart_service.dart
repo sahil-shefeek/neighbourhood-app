@@ -1,6 +1,7 @@
 import 'package:neighbourhood/models/product.dart';
+import 'package:flutter/foundation.dart';
 
-class CartService {
+class CartService extends ChangeNotifier {
   static final CartService _instance = CartService._internal();
   factory CartService() => _instance;
   CartService._internal();
@@ -15,10 +16,12 @@ class CartService {
     } else {
       _cartItems[product] = 1;
     }
+    notifyListeners();
   }
 
   void removeFromCart(Product product) {
     _cartItems.remove(product);
+    notifyListeners();
   }
 
   void updateQuantity(Product product, int quantity) {

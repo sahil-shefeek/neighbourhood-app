@@ -50,7 +50,7 @@ class AppNavigation {
         name: 'Product',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (BuildContext context, GoRouterState state) =>
-            ProductPage(product: state.extra as Product),
+            ProductPage(item: state.extra),
       ),
       GoRoute(
         path: '/profile',

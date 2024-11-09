@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:neighbourhood/common/glass_container.dart';
 
 class ProfileView extends StatelessWidget {
   const ProfileView({super.key});
@@ -43,6 +44,7 @@ class ProfileView extends StatelessWidget {
           final String email = payload['email'] ?? 'No email available';
 
           return Scaffold(
+            extendBodyBehindAppBar: true,
             appBar: PreferredSize(
               preferredSize: const Size.fromHeight(kToolbarHeight),
               child: AppBar(
@@ -79,28 +81,30 @@ class ProfileView extends StatelessWidget {
                 ],
               ),
             ),
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Profile",
-                      style:
-                          TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildProfileSection(email),
-                    const SizedBox(height: 25),
-                    const Text(
-                      "Interactions",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 16),
-                    _buildNoInteractionsSection(),
+            body: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.orange.shade900,
+                    Colors.orange.shade800,
+                    Colors.orange.shade700,
                   ],
+                ),
+              ),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(height: kToolbarHeight + 40),
+                      _buildProfileSection(email),
+                      const SizedBox(height: 32),
+                      _buildNoInteractionsSection(),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -111,61 +115,58 @@ class ProfileView extends StatelessWidget {
   }
 
   Widget _buildProfileSection(String email) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Colors.orange.shade900,
-            Colors.orange.shade800,
-            Colors.orange.shade400,
-          ],
-        ),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
+    return GlassContainer(
+      blur: 15,
+      gradientColor: Colors.black,
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+      child: Column(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              'https://via.placeholder.com/50', // Replace with user image URL
-              width: 80,
-              height: 80,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Icon(
-                  Icons.error,
-                  color: Colors.red,
-                  size: 80,
-                );
-              },
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(50),
+              border:
+                  Border.all(color: Colors.white.withOpacity(0.5), width: 2),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(48),
+              child: Image.network(
+                'https://via.placeholder.com/100',
+                width: 96,
+                height: 96,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    width: 96,
+                    height: 96,
+                    color: Colors.white.withOpacity(0.1),
+                    child: Icon(Icons.person, color: Colors.white70, size: 48),
+                  );
+                },
+              ),
             ),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  email,
-                  style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
-                ),
-                const Text(
-                  'No bio available',
-                  style: TextStyle(fontSize: 13, color: Colors.white70),
-                ),
-              ],
-            ),
+          const SizedBox(height: 16),
+          Text(
+            email,
+            style: const TextStyle(
+                fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+            textAlign: TextAlign.center,
           ),
-          ElevatedButton(
+          const SizedBox(height: 8),
+          const Text(
+            'No bio available',
+            style: TextStyle(fontSize: 14, color: Colors.white70),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton.icon(
             onPressed: null, // Disable the edit button
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.orange.shade600,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
-            child: const Text("Edit"),
+            icon: const Icon(Icons.edit),
+            label: const Text("Edit Profile"),
           ),
         ],
       ),
@@ -173,34 +174,35 @@ class ProfileView extends StatelessWidget {
   }
 
   Widget _buildNoInteractionsSection() {
-    return Center(
-      child: Container(
-        padding: const EdgeInsets.all(22),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Colors.orange.shade900,
-              Colors.orange.shade800,
-              Colors.orange.shade400,
-            ],
+    return GlassContainer(
+      blur: 15,
+      gradientColor: Colors.black,
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.timeline,
+            color: Colors.white.withOpacity(0.8),
+            size: 64,
           ),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(
-              Icons.info_outline,
-              color: Colors.white70,
-              size: 50,
+          const SizedBox(height: 24),
+          Text(
+            "Start interacting with your community",
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.white.withOpacity(0.9),
+              fontWeight: FontWeight.w600,
             ),
-            SizedBox(height: 16),
-            Text(
-              "No interactions available",
-              style: TextStyle(fontSize: 16, color: Colors.white70),
-            ),
-          ],
-        ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 12),
+          const Text(
+            "Your activity and interactions will appear here",
+            style: TextStyle(fontSize: 16, color: Colors.white70),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }

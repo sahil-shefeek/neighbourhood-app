@@ -20,7 +20,7 @@ class AuthService {
       final response = await http.post(
         Uri.parse('$baseUrl/auth/refresh'),
         headers: {
-          'Cookie': 'refresh=$refreshToken',
+          'set-cookie': 'refresh=$refreshToken',
         },
       );
 

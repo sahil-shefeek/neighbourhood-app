@@ -4,7 +4,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:neighbourhood/constants.dart';
+import 'package:neighbourhood/utils/glass_utils.dart';
 import 'package:neighbourhood/utils/snackbar_utils.dart';
+import 'package:flutter/services.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -80,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
             colors: [
               Colors.orange.shade900,
               Colors.orange.shade800,
-              Colors.orange.shade400,
+              Colors.orange.shade500,
             ],
           ),
         ),
@@ -106,72 +108,58 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               const SizedBox(height: 20),
-              Container(
-                height: MediaQuery.of(context).size.height - 200,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(60),
-                      topRight: Radius.circular(60)),
+              GlassContainer(
+                customBorderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(60),
+                  topRight: Radius.circular(60),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(30),
-                  child: Column(
-                    children: <Widget>[
-                      const SizedBox(height: 60),
-                      TextField(
-                        controller: emailController,
-                        decoration: InputDecoration(
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height - 200,
+                  child: Padding(
+                    padding: const EdgeInsets.all(30),
+                    child: Column(
+                      children: <Widget>[
+                        const SizedBox(height: 60),
+                        GlassTextField(
+                          controller: emailController,
                           hintText: "Email",
-                          hintStyle: const TextStyle(color: Colors.grey),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(
-                              color: Colors.grey,
-                              width: 1,
-                            ),
-                          ),
+                          gradientColor: Colors.white,
+                          keyboardType: TextInputType.emailAddress,
+                          autofillHints: const [
+                            AutofillHints.username,
+                            AutofillHints.email
+                          ],
                         ),
-                      ),
-                      const SizedBox(height: 20),
-                      TextField(
-                        controller: passwordController,
-                        obscureText: true,
-                        decoration: InputDecoration(
+                        const SizedBox(height: 20),
+                        GlassTextField(
+                          controller: passwordController,
                           hintText: "Password",
-                          hintStyle: const TextStyle(color: Colors.grey),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(
-                              color: Colors.grey,
-                              width: 1,
-                            ),
-                          ),
+                          gradientColor: Colors.white,
+                          obscureText: true,
+                          autofillHints: const [AutofillHints.password],
+                          onEditingComplete: () =>
+                              TextInput.finishAutofillContext(),
                         ),
-                      ),
-                      const SizedBox(height: 40),
-                      ElevatedButton(
-                        onPressed: _isLoading ? null : _login,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange[900],
-                          minimumSize: const Size(double.infinity, 50),
+                        const SizedBox(height: 40),
+                        GlassButton(
+                          onPressed: _isLoading ? null : _login,
+                          gradientColor: Colors.white,
+                          child: _isLoading
+                              ? const CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white),
+                                )
+                              : const Text("Login",
+                                  style: TextStyle(color: Colors.white)),
                         ),
-                        child: _isLoading
-                            ? const CircularProgressIndicator(
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.white),
-                              )
-                            : const Text("Login",
-                                style: TextStyle(color: Colors.white)),
-                      ),
-                      const SizedBox(height: 20),
-                      TextButton(
-                        onPressed: () {
-                          context.push('/signup');
-                        },
-                        child: const Text("New here? Sign up"),
-                      ),
-                    ],
+                        const SizedBox(height: 20),
+                        TextButton(
+                          onPressed: () => context.push('/signup'),
+                          child: const Text("New here? Sign up",
+                              style: TextStyle(color: Colors.white70)),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
