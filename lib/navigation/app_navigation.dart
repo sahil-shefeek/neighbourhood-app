@@ -48,6 +48,7 @@ class AppNavigation {
       GoRoute(
         path: '/product',
         name: 'Product',
+        parentNavigatorKey: _rootNavigatorKey,
         builder: (BuildContext context, GoRouterState state) =>
             ProductPage(product: state.extra as Product),
       ),
