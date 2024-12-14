@@ -1,6 +1,6 @@
 # Neighbourhood
 
-A Flutter-based community networking application that connects local residents.
+Connecting Local People, Sharing Local Value.
 
 ## Features
 
